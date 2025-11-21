@@ -1,5 +1,5 @@
 export const nav_items= [
-    {name: "home", title: "/Dashboard"},
-    {name: "search", title: "/Search"},
-    {name: "watchlists", title: "/Watchlists"},
+    {href: "/", label: "Dashboard"},
+    {href: "/search", label: "Search"},
+    {href: "/watchlists", label: "Watchlists"},
 ]
