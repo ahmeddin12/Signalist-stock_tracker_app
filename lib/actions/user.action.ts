@@ -5,7 +5,7 @@ import {email} from "zod";
 import {util} from "protobufjs";
 import toArray = util.toArray;
 
-export const getAllUsersForNewsEmail = async () => {
+export const getAllUsersForNewsEmail = async (): Promise<{ id: string; email: string; name: string }[]> => {
     try {
         const mongoose = await connectToDatabase();
         const db = mongoose.connection.db;
@@ -22,7 +22,9 @@ export const getAllUsersForNewsEmail = async () => {
         }))
 
     }
-    catch {
-        console.error('Error fetching users for news Email')
+    catch (err) {
+        console.error('Error fetching users for news Email:', err);
+        return [];
     }
+}
 }
