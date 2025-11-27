@@ -2,9 +2,11 @@ import { inngest } from '@/lib/inngest/client'
 import {NEWS_SUMMARY_EMAIL_PROMPT, PERSONALIZED_WELCOME_EMAIL_PROMPT} from "@/lib/inngest/prompts";
 import {sendWelcomeEmail, sendNewsSummaryEmail} from "@/lib/nodemailer";
 import {getAllUsersForNewsEmail} from "@/lib/actions/user.action";
-import { getNews } from "@/lib/actions/finnhub.actions";
+import { getNews, type MarketNewsArticle } from "@/lib/actions/finnhub.actions";
 import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
 import  { formatDateToday } from "@/lib/utils";
+
+type User = { id: string; email: string; name: string };
 
 export const sendSignUpEmail = inngest.createFunction(
     { id: 'sign-up-email' },
