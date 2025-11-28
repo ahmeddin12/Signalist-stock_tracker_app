@@ -27,16 +27,37 @@ const WatchlistButton = ({
                              onWatchlistChange,
                          }: WatchlistButtonComponentProps) => {
     const [added, setAdded] = useState<boolean>(!!isInWatchlist);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     const label = useMemo(() => {
         if (type === "icon") return added ? "" : "";
+        if (loading) return added ? "Removing..." : "Adding...";
         return added ? "Remove from Watchlist" : "Add to Watchlist";
-    }, [added, type]);
+    }, [added, type, loading]);
 
-    const handleClick = () => {
-        const next = !added;
-        setAdded(next);
-        onWatchlistChange?.(symbol, next);
+    const handleClick = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const next = !added;
+            const method = next ? "POST" : "DELETE";
+            const res = await fetch("/api/watchlist", {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ symbol, company: company || symbol }),
+            });
+            if (!res.ok) {
+                const msg = await res.text();
+                throw new Error(msg || "Request failed");
+            }
+            setAdded(next);
+            onWatchlistChange?.(symbol, next);
+        } catch (e: any) {
+            setError(e?.message || "Unable to update watchlist");
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (type === "icon") {
